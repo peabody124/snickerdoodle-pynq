@@ -1,0 +1,139 @@
+/**
+ * Copyright (c) 2016 krtkl inc.
+ *
+ * UIO include device tree source
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 as published by
+ * the Free Software Foundation.
+ */
+
+&fpga_full {
+	uio0: uio0@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 29 4>;
+	};
+
+	uio1: uio1@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 30 4>;
+	};
+
+	uio2: uio2@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 31 4>;
+	};
+
+	uio3: uio3@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 32 4>;
+	};
+
+	uio4: uio4@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 33 4>;
+	};
+
+	uio5: uio5@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 34 4>;
+	};
+
+	uio6: uio6@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 35 4>;
+	};
+
+	uio7: uio7@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 36 4>;
+	};
+
+	uio8: uio8@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 52 4>;
+	};
+
+	uio9: uio9@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 53 4>;
+	};
+
+	uio10: uio10@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 54 4>;
+	};
+
+	uio11: uio11@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 55 4>;
+	};
+
+	uio12: uio12@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 56 4>;
+	};
+
+	uio13: uio13@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 57 4>;
+	};
+
+	uio14: uio14@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 58 4>;
+	};
+
+	uio15: uio15@40000000 {
+		reg = <0x40000000 0x80000000>;
+		compatible = "krtkl,generic-uio,ui_pdrv";
+		status = "okay";
+		interrupt-parent = <&intc>;
+		interrupts = <0 59 4>;
+	};
+};
