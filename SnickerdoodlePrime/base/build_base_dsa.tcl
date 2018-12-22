@@ -1,5 +1,5 @@
-set overlay_name "emulation"
-set design_name "bisc_if_emu"
+set overlay_name "base"
+set design_name "base"
 
 # open project and block design
 open_project -quiet ./${overlay_name}/${overlay_name}.xpr
