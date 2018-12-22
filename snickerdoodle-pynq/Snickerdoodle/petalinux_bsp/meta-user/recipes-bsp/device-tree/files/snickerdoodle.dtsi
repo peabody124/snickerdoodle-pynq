@@ -1,0 +1,114 @@
+/**
+ * Copyright (c) 2016 krtkl inc.
+ *
+ * snickerdoodle base device tree source
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 as published by
+ * the Free Software Foundation.
+ */
+
+/include/ "zynq-7000.dtsi"
+/ {
+        compatible = "krtkl,snickerdoodle", "xlnx,zynq-7000";
+
+	aliases {
+		serial0 = &uart0;
+		spi0 = &qspi;
+		spi1 = &spi1;
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+	};
+
+	chosen {
+		bootargs = "console=ttyPS0,115200n8 earlyprintk";
+		linux,stdout-path = &uart0;
+		stdout-path = &uart0;
+	};
+
+	wlan_en_reg: fixed-regulator-wlen {
+		compatible = "regulator-fixed";
+		regulator-name = "wlan-en-regulator";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio0 9 4>;
+		startup-delay-us = <70000>;
+		enable-active-high;
+	};
+
+	xlnk {
+		compatible = "xlnx,xlnk-1.0";
+		clock-names = "clk50", "clk100", "clk150", "clk200";
+		clocks = <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
+	};
+};
+
+&clkc {
+	ps-clk-frequency = <33333333>;
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&sdhci0 {
+	status = "okay";
+};
+
+&sdhci1 {
+	status = "okay";
+	vmmc-supply = <&wlan_en_reg>;
+	bus-width = <4>;
+	cap-power-off-card;
+	keep-power-in-suspend;
+	#address-cells = <1>;
+	#size-cells = <0>;	
+
+	wlcore: wlcore@0 {
+		reg = <2>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <0 4>;
+	};
+};
+
+&spi1 {
+	status = "okay";
+	num-cs = <1>;
+};
+
+&qspi {
+	status = "okay";
+	is-dual = <0>;
+	num-cs = <1>;
+	xlnx,qspi-mode = <1>;
+
+	flash@0 {
+		#address-cells = <1>;
+		#size-cells =<1>;
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		m25p,fast-read;
+		
+		partition@bootloader {
+			label = "bootloader";
+			reg = <0x0 0xe0000>;
+		};
+		partition@env {
+			label = "env";
+			reg = <0xe0000 0x20000>;
+		};
+		partition@linux {
+			label = "linux";
+			reg = <0x100000 0x500000>;
+		};
+		partition@devicetree {
+			label = "devicetree";
+			reg = <0x600000 0x620000>;
+		};
+		partition@rootfs {
+			label = "rootfs";
+			reg = <0x620000 0x9e0000>;
+		};
+	};
+};
