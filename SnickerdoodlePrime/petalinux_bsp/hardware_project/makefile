@@ -1,5 +1,5 @@
-overlay_name := Snickerdoodle
-design_name := Snickerdoodle
+overlay_name := SnickerdoodlePrime
+design_name := SnickerdoodlePrime
 
 all: bit
 	@echo

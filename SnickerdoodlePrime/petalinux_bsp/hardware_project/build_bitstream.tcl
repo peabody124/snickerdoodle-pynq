@@ -1,5 +1,5 @@
-set overlay_name "Snickerdoodle"
-set design_name "Snickerdoodle"
+set overlay_name "SnickerdoodlePrime"
+set design_name "SnickerdoodlePrime"
 
 # Add top wrapper, no xdc files
 make_wrapper -files [get_files ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd] -top
