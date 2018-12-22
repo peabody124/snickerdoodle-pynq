@@ -40,6 +40,8 @@ You need to use this fork for Snickerdoodle and 2018.3. The necessary changes on
     cd /path/to/PYNQ/sdbuild
     make BOARDDIR=/path/to/snickerdoodle-pynq
 
+**Make sure you use an absolute path to the the repository. The build process breaks with relative paths.**
+
 Note if you are testing or debugging you can also call
     make boot_files BOARDDIR...
     make sysroot BOARDDIR ...
