@@ -1,4 +1,5 @@
 /include/ "system-conf.dtsi"
+/include/ "pynq_zynq.dtsi"
 / {
         model = "snickerdoodle Prime";
         compatible = "krtkl,snickerdoodle-prime", "krtkl,snickerdoodle", "xlnx,zynq-7000";
