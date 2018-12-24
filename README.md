@@ -79,3 +79,45 @@ Then run
 * In a browser go to http://192.168.2.1
 * Use the password "xilinx"
 
+# Known issues
+
+* PetaLinux 2018.3 breaks the kernel configuration for UIO (via pulling in opanamp) as it makes one part the UIO driver a module and trumps changes from other sources. I could not find a way to override this from the meta-layer. For now you can edit your PetaLinux install. ```PetaLinxu-2018.3/components/yocto/source/arm/conf/bblayers.conf```. Note, that this is required to perform asynchronous DMA transfers.
+
+* gcc-mb does not compile (which I'll keep pushing on, because I'd like the coprocessor). One part of this requires this patch.
+```
+cat 0001-Fix-gcc-mb-build.patch 
+From b1c56e886733d632f071ac7b8beb57862ec84172 Mon Sep 17 00:00:00 2001
+From: James Cotton <peabody124@gmail.com>
+Date: Sun, 23 Dec 2018 19:54:27 -0600
+Subject: [PATCH 1/2] Fix gcc-mb build
+
+---
+ .../samples/aarch64-linux-gnu,microblazeel-xilinx-elf/crosstool.config   | 1 +
+ .../samples/arm-linux-gnueabihf,microblazeel-xilinx-elf/crosstool.config | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/sdbuild/packages/gcc-mb/samples/aarch64-linux-gnu,microblazeel-xilinx-elf/crosstool.config b/sdbuild/packages/gcc-mb/samples/aarch64-linux-gnu,microblazeel-xilinx-elf/crosstool.config
+index 4e68dc9..42938dd 100644
+--- a/sdbuild/packages/gcc-mb/samples/aarch64-linux-gnu,microblazeel-xilinx-elf/crosstool.config
++++ b/sdbuild/packages/gcc-mb/samples/aarch64-linux-gnu,microblazeel-xilinx-elf/crosstool.config
+@@ -12,4 +12,5 @@ CT_HOST="aarch64-linux-gnu"
+ CT_BINUTILS_V_2_23_2=y
+ CT_BINUTILS_CUSTOM=y
+ CT_BINUTILS_CUSTOM_LOCATION="${CT_COMPILE_ROOT}/binutils"
++CT_BINUTILS_CUSTOM_VERSION="2_23_2"
+ CT_CC_LANG_CXX=y
+diff --git a/sdbuild/packages/gcc-mb/samples/arm-linux-gnueabihf,microblazeel-xilinx-elf/crosstool.config b/sdbuild/packages/gcc-mb/samples/arm-linux-gnueabihf,microblazeel-xilinx-elf/crosstool.config
+index 81f3d52..d80d37d 100644
+--- a/sdbuild/packages/gcc-mb/samples/arm-linux-gnueabihf,microblazeel-xilinx-elf/crosstool.config
++++ b/sdbuild/packages/gcc-mb/samples/arm-linux-gnueabihf,microblazeel-xilinx-elf/crosstool.config
+@@ -12,4 +12,5 @@ CT_HOST="arm-linux-gnueabihf"
+ CT_BINUTILS_V_2_23_2=y
+ CT_BINUTILS_CUSTOM=y
+ CT_BINUTILS_CUSTOM_LOCATION="${CT_COMPILE_ROOT}/binutils"
++CT_BINUTILS_CUSTOM_VERSION="2_23_2"
+ CT_CC_LANG_CXX=y
+-- 
+2.7.4
+```
+
+But I'm still working on another related to the gcc not building with Ubuntu's compiler.
