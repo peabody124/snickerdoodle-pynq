@@ -4,6 +4,7 @@ set design_name "SnickerdoodleBlack"
 # Add top wrapper, no xdc files
 make_wrapper -files [get_files ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd] -top
 add_files -norecurse ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/hdl/${design_name}_wrapper.v
+import_files -fileset constrs_1 -norecurse ./constraints.xdc
 set_property top ${design_name}_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
