@@ -1,0 +1,83 @@
+/include/ "system-conf.dtsi"
+/include/ "pynq_zynq.dtsi"
+/ {
+        model = "snickerdoodle Black";
+        compatible = "krtkl,snickerdoodle-black", "krtkl,snickerdoodle", "xlnx,zynq-7000";
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		reserved@18000000 {
+			reg = <0x18000000 0x8000000>;
+		};
+	};
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x0 0x20000000>;
+	};
+
+	aliases {
+		serial0 = &uart0;
+		spi0 = &qspi;
+		spi1 = &spi1;
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+	};
+
+	wlan_en_reg: fixed-regulator-wlen {
+		compatible = "regulator-fixed";
+		regulator-name = "wlan-en-regulator";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&gpio0 9 4>;
+		startup-delay-us = <70000>;
+		enable-active-high;
+	};
+
+	xlnk {
+		compatible = "xlnx,xlnk-1.0";
+		clock-names = "clk50", "clk100", "clk150", "clk200";
+		clocks = <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
+	};
+};
+
+&clkc {
+	ps-clk-frequency = <33333333>;
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&sdhci0 {
+	status = "okay";
+};
+
+&sdhci1 {
+	status = "okay";
+	vmmc-supply = <&wlan_en_reg>;
+	bus-width = <4>;
+	cap-power-off-card;
+	keep-power-in-suspend;
+	#address-cells = <1>;
+	#size-cells = <0>;	
+
+	wlcore: wlcore@0 {
+		reg = <2>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <0 4>;
+	};
+};
+
+&spi1 {
+	status = "okay";
+	num-cs = <1>;
+};
+
+&wlcore {
+	compatible = "wlcore", "ti,wl1801";
+};
+
