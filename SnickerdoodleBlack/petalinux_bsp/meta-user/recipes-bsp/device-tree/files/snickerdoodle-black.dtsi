@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2016 krtkl inc.
  *
- * snickerdoodle prime base device tree source
+ * snickerdoodle black base device tree source
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 as published by
@@ -11,24 +11,34 @@
 /include/ "snickerdoodle.dtsi"
 / {
         model = "snickerdoodle Black";
-        compatible = "krtkl,snickerdoodle-prime", "krtkl,snickerdoodle", "xlnx,zynq-7000";
+        compatible = "krtkl,snickerdoodle-black", "krtkl,snickerdoodle", "xlnx,zynq-7000";
+
+	cpus {
+		cpu@0 {
+			operating-points = <
+				/* kHz	uV */
+				866666	1000000
+				433333	1000000
+			>;
+		};
+	};
 
 	reserved-memory {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges;
 
-		reserved@18000000 {
-			reg = <0x18000000 0x8000000>;
+		reserved@30000000 {
+			reg = <0x30000000 0x10000000>;
 		};
 	};
 
 	memory@0 {
 		device_type = "memory";
-		reg = <0x0 0x20000000>;
+		reg = <0x0 0x40000000>;
 	};
 };
 
 &wlcore {
-	compatible = "wlcore", "ti,wl1801";
+	compatible = "wlcore", "ti,wl1837";
 };
