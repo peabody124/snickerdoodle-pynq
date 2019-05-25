@@ -9,14 +9,14 @@
 		#size-cells = <1>;
 		ranges;
 
-		reserved@18000000 {
-			reg = <0x18000000 0x8000000>;
+		reserved@30000000 {
+			reg = <0x30000000 0x10000000>;
 		};
 	};
 
 	memory@0 {
 		device_type = "memory";
-		reg = <0x0 0x20000000>;
+		reg = <0x0 0x40000000>;
 	};
 
 	aliases {
@@ -25,6 +25,7 @@
 		spi1 = &spi1;
 		mmc0 = &sdhci0;
 		mmc1 = &sdhci1;
+		ethernet0 = &gem0;
 	};
 
 	wlan_en_reg: fixed-regulator-wlen {
@@ -77,7 +78,26 @@
 	num-cs = <1>;
 };
 
+&gem0 {
+	status = "okay";
+	phy-mode = "rgmii-id";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	phy-reset-gpio = <&gpio0 19 1>;
+
+	eth_phy0: ethernet-phy@0 {
+		reg = <0>;
+		device_type = "ethernet-phy";
+	};
+
+	gmii2rgmii0: gmiitorgmii@8 {
+		compatible = "xlnx,gmii-to-rgmii-1.0";
+		reg = <8>;
+		phy-handle = <&eth_phy0>;
+	};
+};
+
 &wlcore {
-	compatible = "wlcore", "ti,wl1801";
+	compatible = "wlcore", "ti,wl1837";
 };
 
