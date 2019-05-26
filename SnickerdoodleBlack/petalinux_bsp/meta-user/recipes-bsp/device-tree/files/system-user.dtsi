@@ -85,7 +85,7 @@
 	#size-cells = <0>;
 	phy-reset-gpio = <&gpio0 19 1>;
 
-	eth_phy0: ethernet-phy@0 {
+	phy0: ethernet-phy@0 {
 		reg = <0>;
 		device_type = "ethernet-phy";
 	};
@@ -93,7 +93,26 @@
 	gmii2rgmii0: gmiitorgmii@8 {
 		compatible = "xlnx,gmii-to-rgmii-1.0";
 		reg = <8>;
-		phy-handle = <&eth_phy0>;
+		phy-handle = <&phy0>;
+	};
+};
+
+&gem1 {
+	status = "okay";
+	phy-mode = "rgmii-id";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	phy-reset-gpio = <&gpio0 17 1>;
+
+	phy1: ethernet-phy@1 {
+		reg = <0>;
+		device_type = "ethernet-phy";
+	};
+
+	gmii2rgmii1: gmiitorgmii@9 {
+		compatible = "xlnx,gmii-to-rgmii-1.0";
+		reg = <9>;
+		phy-handle = <&phy1>;
 	};
 };
 
