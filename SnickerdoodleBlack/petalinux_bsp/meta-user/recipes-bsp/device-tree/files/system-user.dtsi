@@ -26,6 +26,7 @@
 		mmc0 = &sdhci0;
 		mmc1 = &sdhci1;
 		ethernet0 = &gem0;
+		ethernet1 = &gem1;
 	};
 
 	wlan_en_reg: fixed-regulator-wlen {
@@ -79,21 +80,20 @@
 };
 
 &gem0 {
-	local-mac-address = [00 0a 35 00 00 01];
-	phy-mode = "rgmii-id";
-	phy-reset-gpio = <&gpio0 19 1>;
-	phy0: ethernet-phy@0 {
-		reg = <0>;
-		device_type = "ethernet-phy";
+	mdio {
+		phy0: ethernet-phy@0 {
+			reg = <0>;
+			device_type = "ethernet-phy";
+		};
 	};
 };
 
 &gem1 {
-	phy-mode = "rgmii-id";
-	phy-reset-gpio = <&gpio0 17 1>;
-	phy1: ethernet-phy@1 {
-		reg = <0>;
-		device_type = "ethernet-phy";
+	mdio {
+		phy1: ethernet-phy@1 {
+			reg = <0>;
+			device_type = "ethernet-phy";
+		};
 	};
 };
 
