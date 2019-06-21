@@ -25,7 +25,6 @@
 		spi1 = &spi1;
 		mmc0 = &sdhci0;
 		mmc1 = &sdhci1;
-		ethernet0 = &gem0;
 	};
 
 	wlan_en_reg: fixed-regulator-wlen {
@@ -76,16 +75,6 @@
 &spi1 {
 	status = "okay";
 	num-cs = <1>;
-};
-
-&gem0 {
-	phy-mode = "rgmii-id";
-	mdio {
-		phy0: ethernet-phy@0 {
-			reg = <0>;
-			device_type = "ethernet-phy";
-		};
-	};
 };
 
 &wlcore {
