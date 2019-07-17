@@ -100,6 +100,7 @@
 	local-mac-address = [00 0a 35 00 c0 c2];
 	phy-mode = "rgmii-id";
 	phy-handle = <&phy1>;
+	status = "disabled";
 	mdio {
 		ethernet_gmii_to_rgmii_1@9 {
 			phy-handle = <&phy1>;
