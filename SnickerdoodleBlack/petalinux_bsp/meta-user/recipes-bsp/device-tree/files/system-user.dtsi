@@ -49,7 +49,20 @@
 };
 
 &gem0 {
+	local-mac-address = [00 0a 35 00 c0 12];
 	phy-mode = "rgmii-id";
+	phy-handle = <&phy0>;
+	mdio {
+		ethernet_gmii_to_rgmii_0@8 {
+			phy-handle = <&phy0>;
+			compatible = "xlnx,gmii-to-rgmii-1.0";
+			reg = <0x8>;
+		};
+		phy0: phy@0 {
+			reg = <0>;
+			device_type = "ethernet-phy";
+		};
+	};
 };
 
 &uart0 {
