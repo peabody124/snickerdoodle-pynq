@@ -123,9 +123,7 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:proc_sys_reset:5.0\
 xilinx.com:ip:processing_system7:5.5\
-xilinx.com:ip:gmii_to_rgmii:4.0\
 "
 
    set list_ips_missing ""
@@ -153,80 +151,6 @@ if { $bCheckIPsPassed != 1 } {
 ##################################################################
 # DESIGN PROCs
 ##################################################################
-
-
-# Hierarchical cell: ethernet
-proc create_hier_cell_ethernet { parentCell nameHier } {
-
-  variable script_folder
-
-  if { $parentCell eq "" || $nameHier eq "" } {
-     catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_ethernet() - Empty argument(s)!"}
-     return
-  }
-
-  # Get object for parentCell
-  set parentObj [get_bd_cells $parentCell]
-  if { $parentObj == "" } {
-     catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
-     return
-  }
-
-  # Make sure parentObj is hier blk
-  set parentType [get_property TYPE $parentObj]
-  if { $parentType ne "hier" } {
-     catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
-     return
-  }
-
-  # Save current instance; Restore later
-  set oldCurInst [current_bd_instance .]
-
-  # Set parent object as current
-  current_bd_instance $parentObj
-
-  # Create cell and set as current instance
-  set hier_obj [create_bd_cell -type hier $nameHier]
-  current_bd_instance $hier_obj
-
-  # Create interface pins
-  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:gmii_rtl:1.0 GMII_0
-  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:mdio_rtl:1.0 MDIO_GEM_0
-  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:mdio_rtl:1.0 MDIO_PHY_0
-  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:rgmii_rtl:1.0 RGMII_0
-
-  # Create pins
-  create_bd_pin -dir I -type clk clkin
-  create_bd_pin -dir I -type rst ext_reset_in
-  create_bd_pin -dir I -type clk gmii_clk_0
-
-  # Create instance: gmii_to_rgmii_0, and set properties
-  set gmii_to_rgmii_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.0 gmii_to_rgmii_0 ]
-  set_property -dict [ list \
-   CONFIG.C_EXTERNAL_CLOCK {true} \
-   CONFIG.C_USE_IDELAY_CTRL {true} \
-   CONFIG.RGMII_TXC_SKEW {0} \
-   CONFIG.SupportLevel {Include_Shared_Logic_in_Core} \
- ] $gmii_to_rgmii_0
-
-  # Create instance: proc_sys_reset_200MHz, and set properties
-  set proc_sys_reset_200MHz [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_200MHz ]
-
-  # Create interface connections
-  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins MDIO_PHY_0] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
-  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins RGMII_0] [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
-  connect_bd_intf_net -intf_net Conn3 [get_bd_intf_pins MDIO_GEM_0] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
-  connect_bd_intf_net -intf_net Conn4 [get_bd_intf_pins GMII_0] [get_bd_intf_pins gmii_to_rgmii_0/GMII]
-
-  # Create port connections
-  connect_bd_net -net clkin_1 [get_bd_pins clkin] [get_bd_pins gmii_to_rgmii_0/clkin] [get_bd_pins proc_sys_reset_200MHz/slowest_sync_clk]
-  connect_bd_net -net ext_reset_in_1 [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_200MHz/ext_reset_in]
-  connect_bd_net -net gmii_clk_1 [get_bd_pins gmii_clk_0] [get_bd_pins gmii_to_rgmii_0/gmii_clk]
-  connect_bd_net -net rx_reset_1 [get_bd_pins gmii_to_rgmii_0/rx_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset] [get_bd_pins proc_sys_reset_200MHz/peripheral_reset]
-
-  # Restore current instance
-  current_bd_instance $oldCurInst
-}
 
 
 # Procedure to create entire design; Provide argument to make
@@ -263,24 +187,10 @@ proc create_root_design { parentCell } {
 
   # Create interface ports
   set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
-  set ETH0_MDIO [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:mdio_rtl:1.0 ETH0_MDIO ]
-  set ETH0_RGMII [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:rgmii_rtl:1.0 ETH0_RGMII ]
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
 
-  # Create ports
-  set ETH0_CLK125 [ create_bd_port -dir I -type clk ETH0_CLK125 ]
-  set_property -dict [ list \
-   CONFIG.FREQ_HZ {125000000} \
- ] $ETH0_CLK125
-
-  # Create instance: ethernet
-  create_hier_cell_ethernet [current_bd_instance .] ethernet
-
-  # Create instance: proc_sys_reset_150MHz, and set properties
-  set proc_sys_reset_150MHz [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_150MHz ]
-
-  # Create instance: processing_system7_0, and set properties
-  set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
+  # Create instance: ps7, and set properties
+  set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
   set_property -dict [ list \
    CONFIG.PCW_ACT_APU_PERIPHERAL_FREQMHZ {866.657959} \
    CONFIG.PCW_ACT_CAN0_PERIPHERAL_FREQMHZ {23.8095} \
@@ -1046,14 +956,14 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_USE_EXPANDED_PS_SLCR_REGISTERS {0} \
    CONFIG.PCW_USE_FABRIC_INTERRUPT {1} \
    CONFIG.PCW_USE_HIGH_OCM {0} \
-   CONFIG.PCW_USE_M_AXI_GP0 {1} \
+   CONFIG.PCW_USE_M_AXI_GP0 {0} \
    CONFIG.PCW_USE_M_AXI_GP1 {0} \
    CONFIG.PCW_USE_PROC_EVENT_BUS {0} \
    CONFIG.PCW_USE_PS_SLCR_REGISTERS {0} \
    CONFIG.PCW_USE_S_AXI_ACP {0} \
    CONFIG.PCW_USE_S_AXI_GP0 {0} \
    CONFIG.PCW_USE_S_AXI_GP1 {0} \
-   CONFIG.PCW_USE_S_AXI_HP0 {1} \
+   CONFIG.PCW_USE_S_AXI_HP0 {0} \
    CONFIG.PCW_USE_S_AXI_HP1 {0} \
    CONFIG.PCW_USE_S_AXI_HP2 {0} \
    CONFIG.PCW_USE_S_AXI_HP3 {0} \
@@ -1064,20 +974,13 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_WDT_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_WDT_PERIPHERAL_ENABLE {0} \
    CONFIG.PCW_WDT_PERIPHERAL_FREQMHZ {133.333333} \
- ] $processing_system7_0
+ ] $ps7
 
   # Create interface connections
-  connect_bd_intf_net -intf_net ethernet_ETH0_MDIO [get_bd_intf_ports ETH0_MDIO] [get_bd_intf_pins ethernet/MDIO_PHY_0]
-  connect_bd_intf_net -intf_net ethernet_ETH0_RGMII [get_bd_intf_ports ETH0_RGMII] [get_bd_intf_pins ethernet/RGMII_0]
-  connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins processing_system7_0/DDR]
-  connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins processing_system7_0/FIXED_IO]
-  connect_bd_intf_net -intf_net processing_system7_0_GMII_ETHERNET_0 [get_bd_intf_pins ethernet/GMII_0] [get_bd_intf_pins processing_system7_0/GMII_ETHERNET_0]
-  connect_bd_intf_net -intf_net processing_system7_0_MDIO_ETHERNET_0 [get_bd_intf_pins ethernet/MDIO_GEM_0] [get_bd_intf_pins processing_system7_0/MDIO_ETHERNET_0]
+  connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins ps7/DDR]
+  connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins ps7/FIXED_IO]
 
   # Create port connections
-  connect_bd_net -net gmii_clk_0_1 [get_bd_ports ETH0_CLK125] [get_bd_pins ethernet/gmii_clk_0]
-  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins ethernet/clkin] [get_bd_pins proc_sys_reset_150MHz/slowest_sync_clk] [get_bd_pins processing_system7_0/FCLK_CLK3] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]
-  connect_bd_net -net processing_system7_0_FCLK_RESET3_N [get_bd_pins ethernet/ext_reset_in] [get_bd_pins proc_sys_reset_150MHz/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET3_N]
 
   # Create address segments
 
