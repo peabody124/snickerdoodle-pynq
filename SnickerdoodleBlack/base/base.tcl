@@ -394,9 +394,6 @@ proc create_hier_cell_ethernet { parentCell nameHier } {
   # Create instance: ethernet
   create_hier_cell_ethernet [current_bd_instance .] ethernet
 
-  # Create instance: proc_sys_reset_150MHz, and set properties
-  set proc_sys_reset_150MHz [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_150MHz ]
-
   # Create instance: processing_system7_0, and set properties
   set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
   set_property -dict [ list \
@@ -1215,45 +1212,10 @@ proc create_hier_cell_ethernet { parentCell nameHier } {
   # Create port connections
   connect_bd_net -net gmii_clk_0_1 [get_bd_ports ETH0_CLK125] [get_bd_pins ethernet/gmii_clk_0]
   connect_bd_net -net gmii_clk_1_1 [get_bd_ports ETH1_CLK125] [get_bd_pins ethernet/gmii_clk_1]
-  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins ethernet/clkin] [get_bd_pins proc_sys_reset_150MHz/slowest_sync_clk] [get_bd_pins processing_system7_0/FCLK_CLK3] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]
-  connect_bd_net -net processing_system7_0_FCLK_RESET3_N [get_bd_pins ethernet/ext_reset_in] [get_bd_pins proc_sys_reset_150MHz/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET3_N]
+  connect_bd_net -net processing_system7_0_FCLK_CLK3 [get_bd_pins ethernet/clkin] [get_bd_pins processing_system7_0/FCLK_CLK3] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]
+  connect_bd_net -net processing_system7_0_FCLK_RESET3_N [get_bd_pins ethernet/ext_reset_in] [get_bd_pins processing_system7_0/FCLK_RESET3_N]
 
   # Create address segments
-
-  # Perform GUI Layout
-  regenerate_bd_layout -layout_string {
-   "ExpandedHierarchyInLayout":"",
-   "PinnedBlocks":"/processing_system7_0|",
-   "guistr":"# # String gsaved with Nlview 6.8.11  2018-08-07 bk=1.4403 VDI=40 GEI=35 GUI=JA:9.0 TLS
-#  -string -flagsOSRD
-preplace port DDR -pg 1 -y 240 -defaultsOSRD
-preplace port ETH1_RGMII -pg 1 -y 410 -defaultsOSRD
-preplace port ETH1_MDIO -pg 1 -y 390 -defaultsOSRD
-preplace port ETH0_MDIO -pg 1 -y 350 -defaultsOSRD
-preplace port ETH0_RGMII -pg 1 -y 370 -defaultsOSRD
-preplace port FIXED_IO -pg 1 -y 260 -defaultsOSRD
-preplace port ETH0_CLK125 -pg 1 -y 540 -defaultsOSRD
-preplace port ETH1_CLK125 -pg 1 -y 520 -defaultsOSRD
-preplace inst proc_sys_reset_150MHz -pg 1 -lvl 3 -y 570 -defaultsOSRD
-preplace inst ethernet -pg 1 -lvl 3 -y 380 -defaultsOSRD -resize 278 192
-preplace inst processing_system7_0 -pg 1 -lvl 2 -y 300 -defaultsOSRD
-preplace netloc ethernet_ETH0_MDIO 1 3 1 NJ
-preplace netloc processing_system7_0_DDR 1 2 2 NJ 240 NJ
-preplace netloc processing_system7_0_FCLK_CLK3 1 1 2 40 530 2110
-preplace netloc gmii_clk_1_1 1 0 3 NJ 520 N 520 2130
-preplace netloc ethernet_ETH0_RGMII 1 3 1 NJ
-preplace netloc processing_system7_0_FCLK_RESET3_N 1 2 1 2140
-preplace netloc ethernet_ETH1_RGMII 1 3 1 NJ
-preplace netloc processing_system7_0_MDIO_ETHERNET_0 1 2 1 2130
-preplace netloc processing_system7_0_FIXED_IO 1 2 2 NJ 260 NJ
-preplace netloc processing_system7_0_MDIO_ETHERNET_1 1 2 1 2110
-preplace netloc processing_system7_0_GMII_ETHERNET_0 1 2 1 2140
-preplace netloc ethernet_ETH1_MDIO 1 3 1 NJ
-preplace netloc processing_system7_0_GMII_ETHERNET_1 1 2 1 2120
-preplace netloc gmii_clk_0_1 1 0 3 NJ 540 NJ 540 2120J
-levelinfo -pg 1 -20 20 1870 2320 2520 -top -200 -bot 1680
-"
-}
 
   # Restore current instance
   current_bd_instance $oldCurInst
