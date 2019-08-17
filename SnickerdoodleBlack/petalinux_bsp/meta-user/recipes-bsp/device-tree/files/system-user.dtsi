@@ -53,20 +53,17 @@
 	local-mac-address = [00 0a 35 00 c0 12];
 	phy-mode = "rgmii-id";
 	status = "okay";
-	phy-handle = <&phy0>;
+	reset-gpios = <&gpio0 19 1>;
 
-	mdio {
-		ethernet_gmii_to_rgmii_0@8 {
-			phy-handle = <&phy0>;
-			compatible = "xlnx,gmii-to-rgmii-1.0";
-			reg = <0x8>;
-		};
-		phy0: ethernet-phy@0 {
-			reg = <0>;
-			device_type = "ethernet-phy";
-			reset-gpios = <&gpio0 19 1>;
-			phy-mode = "rgmii-id";
-		};
+	gmiitorgmii@8 {
+		phy-handle = <&phy0>;
+		compatible = "xlnx,gmii-to-rgmii-1.0";
+		reg = <0x8>;
+	};
+	phy0: ethernet-phy@0 {
+		reg = <0>;
+		device_type = "ethernet-phy";
+		phy-mode = "rgmii-id";
 	};
 };
 
