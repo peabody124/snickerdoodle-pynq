@@ -27,8 +27,6 @@
 		mmc1 = &sdhci1;
 		ethernet0 = &gem0;
 		ethernet1 = &gem1;
-		phy0 = &phy0;
-		phy1 = &phy1;
 	};
 
 	wlan_en_reg: fixed-regulator-wlen {
