@@ -54,6 +54,7 @@
 	local-mac-address = [00 0a 35 00 c0 12];
 	phy-mode = "rgmii-id";
 	status = "okay";
+	phy-reset-gpio = <&gpio0 19 1>;
 	mdio {
 		ethernet_gmii_to_rgmii_0@8 {
 			phy-handle = <&phy0>;
@@ -71,6 +72,7 @@
 	local-mac-address = [00 1a 35 00 c0 12];
 	phy-mode = "rgmii-id";
 	status = "okay";
+	phy-reset-gpio = <&gpio0 17 1>;
 	mdio {
 		ethernet_gmii_to_rgmii_0@9 {
 			phy-handle = <&phy1>;
