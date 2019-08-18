@@ -1,8 +1,14 @@
-# PYNQ on a Snickerdoodle Prime
+# PYNQ on a Snickerdoodle Black (and Prime LE)
 
-This provides a board definition for Snickerdoodle Prime that can be used to create a PYNQ build (using PetaLinux). This allows creating a python interface to the custom PL hardware running on the FPGA. The default implementation here currently does nothing.
+This provides a board definition for Snickerdoodle Prime that can be used to create a PYNQ build (using PetaLinux). This allows creating a python interface to the custom PL hardware running on the FPGA. The interface for the SnickerdoodleBlack also has support for the PiSmasher Ethernet hardware, and shoudl be fairly straightforward to extend with things like audio and HDMI support as an optional overlay.
 
-This build process will create an SD card that should work without issues. It is largely based on https://pynq.readthedocs.io/en/v2.3/pynq_sd_card.html with some modifications as I am using Xilinx 2018.3 which is not yet supported. It was tested with Ubuntu 16.04 in Virtualbox (fresh install) and I found it did not work on Ubuntu 18.04 as PetaLinux does not install on this properly
+This build process will create an SD card that should work without issues. It is largely based on https://pynq.readthedocs.io/en/v2.4/pynq_sd_card.html. It was tested with Ubuntu 16.04 in Virtualbox (fresh install) and I found it did not work on Ubuntu 18.04 as PetaLinux does not install on this properly.
+
+**Quick start** if you have a PYNQ respository and all the prerequisites in place:
+```
+cd <your_location>/PYNQ/sdbuild
+make BOARDDIR=/path/to/snickerdoodle-pynq BOARDS=SnickerdoodleBlack
+```
 
 ## Prerequisites
 ### Install PetaLinux
@@ -25,7 +31,7 @@ copy snickerdoodle_prime_le to Vivado/2018.3/data/boards/board_files
 
 ### Prepare PYNQ
 
-You need to use this fork for Snickerdoodle and 2018.3. The necessary changes on master, but are not compatible with default boards.
+At this point you should be able to use the official PYNQ v2.4 repository, although I was having issues from the gcc-mb (microblaze support) so you can use my branch if that is an issue. 
 
 ```git clone http://github.com/peabody124/PYNQ```
 
