@@ -60,7 +60,12 @@ Note if you are testing or debugging you can also call
 ### Networking to web
 via command line below. **note there is also a jupyter notebook to do this in common/wifi.ipynb**
 
-## Create your AP configuration (e.g.)
+#### Start local AP to connect to
+
+````sudo systemctl enable wpa_ap.service````
+and reboot 
+
+#### Create your AP configuration (e.g.)
 wpa_passphrase ssid password > /etc/wpa_supplicant.conf
 
 and into /etc/network/interfaces.d/wlan0 write
